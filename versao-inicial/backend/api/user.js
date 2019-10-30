@@ -38,7 +38,7 @@ module.exports = app => {
     delete user.confirmPassword;
 
     if (user.id) {
-      app
+      return app
         .db("users")
         .update(user)
         .where({ id: user.id })
@@ -61,5 +61,14 @@ module.exports = app => {
       .catch(err => res.status(500).send(err));
   };
 
-  return { save, get };
+  const getById = (req, res) => {
+    app
+      .db("users")
+      .select("id", "name", "email", "admin")
+      .where({ id: req.params.id })
+      .then(user => res.json(user))
+      .catch(err => res.status(500).send(err));
+  };
+
+  return { save, get, getById };
 };
